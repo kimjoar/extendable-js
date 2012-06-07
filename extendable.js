@@ -32,6 +32,7 @@
 
 var extendable = (function() {
 
+  // Add all the properties of passed-in object(s) to a given object
   var add = function(obj) {
     var objects = Array.prototype.slice.call(arguments, 1);
 
@@ -45,41 +46,43 @@ var extendable = (function() {
     return obj;
   };
 
+  // Shared empty constructor function to aid in prototype-chain creation.
   var ctor = function(){};
 
-  return function() {
-    this.extend = function(properties, staticProperties) {
-      var parent = this;
+  var extend = function(properties, staticProperties) {
+    var parent = this;
 
-      // Create child constructor
-      var child = function() {
-        // … which only job is to call the parent construtor with all
-        // the arguments
-        parent.apply(this, arguments);
-      };
-
-      // Inherit class (static) properties from parent.
-      add(child, parent);
-
-      // Set the prototype chain to inherit from `parent`
-      ctor.prototype = parent.prototype;
-      child.prototype = new ctor();
-
-      // Add prototype properties, i.e. instance properties
-      if (properties) add(child.prototype, properties);
-
-      // Add static properties, i.e. class properties
-      if (staticProperties) add(child, staticProperties);
-
-      // Correctly set child's prototype.constructor.
-      child.prototype.constructor = child;
-
-      // The child must also be able to create new subclasses
-      child.extend = parent.extend;
-
-      return child;
+    // Create child constructor
+    var child = function() {
+      // … which only job is to call the parent construtor with all
+      // the arguments
+      parent.apply(this, arguments);
     };
 
+    // Inherit class (static) properties from parent.
+    add(child, parent);
+
+    // Set the prototype chain to inherit from `parent`
+    ctor.prototype = parent.prototype;
+    child.prototype = new ctor();
+
+    // Add prototype properties, i.e. instance properties
+    if (properties) add(child.prototype, properties);
+
+    // Add static properties, i.e. class properties
+    if (staticProperties) add(child, staticProperties);
+
+    // Correctly set child's prototype.constructor.
+    child.prototype.constructor = child;
+
+    // The child must also be able to create new subclasses
+    child.extend = parent.extend;
+
+    return child;
+  };
+
+  return function() {
+    this.extend = extend;
     return this;
   };
 
