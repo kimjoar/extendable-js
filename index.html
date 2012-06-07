@@ -1,0 +1,103 @@
+<!DOCTYPE html>  <html> <head>   <title>extendable.js</title>   <meta http-equiv="content-type" content="text/html; charset=UTF-8">   <link rel="stylesheet" media="all" href="docco.css" /> </head> <body>   <div id="container">     <div id="background"></div>          <table cellpadding="0" cellspacing="0">       <thead>         <tr>           <th class="docs">             <h1>               extendable.js             </h1>           </th>           <th class="code">           </th>         </tr>       </thead>       <tbody>                               <tr id="section-1">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-1">&#182;</a>               </div>               <p>extendable.js v0.1.0</p>
+
+<p>extendable.js is a mixin used to easily create a layered architecture.</p>
+
+<p>The code follows a functional mixins pattern described by Angus Croll in his
+<a href="http://javascriptweblog.wordpress.com/2011/05/31/a-fresh-look-at-javascript-mixins/">article on JavaScript mixins</a>.</p>
+
+<h2>Usage</h2>
+
+<p>In browsers include a single JavaScript file:</p>
+
+<pre><code>&lt;script src="extendable-0.1.0.js"&gt;&lt;/script&gt;/
+</code></pre>
+
+<h2>Example usage</h2>
+
+<p>Define the constructor which will make use of extendable:</p>
+
+<pre><code>var View = function() {
+  // constructor
+}
+</code></pre>
+
+<p>This constructor will be called whenever a child is initialized.</p>
+
+<p>You can then add class and instance properties to your parent using regular
+JavaScript:</p>
+
+<pre><code>View.classProperty = function() {};
+
+View.prototype.instanceProperty = function() {}
+</code></pre>
+
+<p>Add (mixin) extendable functionality to <code>View</code>:</p>
+
+<pre><code>extendable.call(View);
+</code></pre>
+
+<p><code>View</code> will now have access to an <code>extend</code> method, which can be used to
+create new components, optionally passing instance and class properties:</p>
+
+<pre><code>var UserView = View.extend({
+  instanceTest: function() {
+    // an example of an instance property
+  }
+}, {
+  classTest: function() {
+    // an example of a class property
+  }
+});
+</code></pre>
+
+<p>This class can now be initialized:</p>
+
+<pre><code>var view = new UserView();
+</code></pre>
+
+<p>And we can call properties on the newly created instance:</p>
+
+<pre><code>view.instanceTest();
+</code></pre>
+
+<p>We can also call properties available on the parent:</p>
+
+<pre><code>view.instanceProperty();
+</code></pre>
+
+<h2>Inspiration</h2>
+
+<p>extendable.js is based on <a href="http://backbonejs.org/">Backbone.js</a> and
+<a href="http://underscorejs.org/">Underscore.js</a>.</p>
+
+<h2>About</h2>
+
+<p>Copyright 2012, Kim Joar Bekkelund MIT Licensed</p>             </td>             <td class="code">               <div class="highlight"><pre><span class="kd">var</span> <span class="nx">extendable</span> <span class="o">=</span> <span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-2">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-2">&#182;</a>               </div>               <p>Helper method to add all the properties of passed-in object(s) to a
+given object</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">add</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">obj</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">objects</span> <span class="o">=</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">l</span> <span class="o">=</span> <span class="nx">objects</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">l</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">source</span> <span class="o">=</span> <span class="nx">objects</span><span class="p">[</span><span class="nx">i</span><span class="p">];</span>
+      <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">prop</span> <span class="k">in</span> <span class="nx">source</span><span class="p">)</span> <span class="p">{</span>
+        <span class="nx">obj</span><span class="p">[</span><span class="nx">prop</span><span class="p">]</span> <span class="o">=</span> <span class="nx">source</span><span class="p">[</span><span class="nx">prop</span><span class="p">];</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nx">obj</span><span class="p">;</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-3">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-3">&#182;</a>               </div>               <p>Shared empty constructor function to aid in prototype-chain creation.</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="kd">var</span> <span class="nx">ctor</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(){};</span>
+
+  <span class="kd">var</span> <span class="nx">extend</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">properties</span><span class="p">,</span> <span class="nx">staticProperties</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">parent</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-4">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-4">&#182;</a>               </div>               <p>Create child constructor</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="kd">var</span> <span class="nx">child</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span></pre></div>             </td>           </tr>                               <tr id="section-5">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-5">&#182;</a>               </div>               <p>… which only job is to call the parent construtor with all
+the arguments</p>             </td>             <td class="code">               <div class="highlight"><pre>      <span class="nx">parent</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">);</span>
+    <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-6">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-6">&#182;</a>               </div>               <p>Inherit class (static) properties from parent.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">add</span><span class="p">(</span><span class="nx">child</span><span class="p">,</span> <span class="nx">parent</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-7">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-7">&#182;</a>               </div>               <p>Set the prototype chain to inherit from <code>parent</code></p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">ctor</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">.</span><span class="nx">prototype</span><span class="p">;</span>
+    <span class="nx">child</span><span class="p">.</span><span class="nx">prototype</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">ctor</span><span class="p">();</span></pre></div>             </td>           </tr>                               <tr id="section-8">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-8">&#182;</a>               </div>               <p>Add prototype properties, i.e. instance properties</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nx">properties</span><span class="p">)</span> <span class="nx">add</span><span class="p">(</span><span class="nx">child</span><span class="p">.</span><span class="nx">prototype</span><span class="p">,</span> <span class="nx">properties</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-9">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-9">&#182;</a>               </div>               <p>Add static properties, i.e. class properties</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="k">if</span> <span class="p">(</span><span class="nx">staticProperties</span><span class="p">)</span> <span class="nx">add</span><span class="p">(</span><span class="nx">child</span><span class="p">,</span> <span class="nx">staticProperties</span><span class="p">);</span></pre></div>             </td>           </tr>                               <tr id="section-10">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-10">&#182;</a>               </div>               <p>Correctly set child's prototype.constructor.</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">child</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">constructor</span> <span class="o">=</span> <span class="nx">child</span><span class="p">;</span></pre></div>             </td>           </tr>                               <tr id="section-11">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-11">&#182;</a>               </div>               <p>The child must also be able to create new subclasses</p>             </td>             <td class="code">               <div class="highlight"><pre>    <span class="nx">child</span><span class="p">.</span><span class="nx">extend</span> <span class="o">=</span> <span class="nx">parent</span><span class="p">.</span><span class="nx">extend</span><span class="p">;</span>
+
+    <span class="k">return</span> <span class="nx">child</span><span class="p">;</span>
+  <span class="p">};</span></pre></div>             </td>           </tr>                               <tr id="section-12">             <td class="docs">               <div class="pilwrap">                 <a class="pilcrow" href="#section-12">&#182;</a>               </div>               <p>The public api</p>             </td>             <td class="code">               <div class="highlight"><pre>  <span class="k">return</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">extend</span> <span class="o">=</span> <span class="nx">extend</span><span class="p">;</span>
+    <span class="k">return</span> <span class="k">this</span><span class="p">;</span>
+  <span class="p">};</span>
+
+<span class="p">})();</span>
+
+</pre></div>             </td>           </tr>                </tbody>     </table>   </div> </body> </html> 
