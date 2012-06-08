@@ -7,8 +7,8 @@ Why?
 ----
 
 I often want to share functionality between several components, e.g.
-views and models. However, I don't always want to pull in large
-libraries to have this functionality.
+between views or between models. However, I don't always want to pull in
+large libraries to have this functionality.
 
 Usage
 -----
